@@ -104,8 +104,33 @@ app.get('/api/proses/pdf/download/:idKelas/:idPdf', async (req, res) => {
     }
 });
 
-// Start the server on port 3000
-const port = 3000;
+// Route to handle PDF deletion
+app.delete('/api/proses/pdf/delete/:idKelas/:idPdf', async (req, res) => {
+    const { idKelas, idPdf } = req.params;
+    const apiUrl = `${API_BASE_URL}/proses/pdf/delete/${idKelas}/${idPdf}`;
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'DELETE',
+            headers: {
+                'ngrok-skip-browser-warning': 'true'
+            }
+        });
+
+        if (!response.ok) {
+            const errorDetails = await response.text();
+            throw new Error(`Network response was not ok: ${response.statusText}, Details: ${errorDetails}`);
+        }
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error deleting PDF:', error);
+        res.status(500).json({ error: 'An error occurred while deleting the PDF' });
+    }
+});
+
+// Start the server on port 3500
+const port = 3500;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });

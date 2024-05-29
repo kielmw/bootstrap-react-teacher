@@ -76,7 +76,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             const id = 0; // Set the value of id here
 
-            fetch(`http://localhost:3000/api/proses/guru/${id}`)
+            fetch(`http://localhost:3500/api/proses/guru/${id}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
