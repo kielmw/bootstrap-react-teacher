@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Kelas</title>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: bold;
+        }
+        .navbar-brand {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.5rem;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .detail, .pdfs, .itemPembelajarans {
+            margin-top: 20px;
+        }
+        .detail th, .pdfs th, .itemPembelajarans th {
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Learning App Teacher</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html">Profile</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="container mt-5">
+        <h1>Detail Kelas</h1>
+        <table class="table table-striped detail" id="kelasDetailTable">
+            <tbody>
+                <!-- Data will be inserted here by JavaScript -->
+            </tbody>
+        </table>
+        <h2>PDFs</h2>
+        <div class="pdfs row" id="pdfsContainer">
+            <!-- PDFs will be inserted here by JavaScript -->
+        </div>
+        <h2>Item Pembelajaran</h2>
+        <div class="itemPembelajarans row" id="itemPembelajaransContainer">
+            <!-- Item Pembelajarans will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Function to get query parameter value by name
+            function getQueryParameter(name) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(name);
+            }
+
+            const id = getQueryParameter('id'); // Retrieve the id from the URL
+
+            if (id) {
+                fetch(`http://localhost:3000/api/proses/${id}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const tableBody = document.querySelector("#kelasDetailTable tbody");
+                        const pdfsContainer = document.getElementById("pdfsContainer");
+                        const itemPembelajaransContainer = document.getElementById("itemPembelajaransContainer");
+
+                        // Assuming the API returns an object with details of the class
+                        const row1 = document.createElement("tr");
+                        const th1 = document.createElement("th");
+                        th1.textContent = "ID";
+                        const td1 = document.createElement("td");
+                        td1.textContent = data.idKelas;
+                        row1.appendChild(th1);
+                        row1.appendChild(td1);
+
+                        const row2 = document.createElement("tr");
+                        const th2 = document.createElement("th");
+                        th2.textContent = "Nama Kelas";
+                        const td2 = document.createElement("td");
+                        td2.textContent = data.namaKelas;
+                        row2.appendChild(th2);
+                        row2.appendChild(td2);
+
+                        const row3 = document.createElement("tr");
+                        const th3 = document.createElement("th");
+                        th3.textContent = "Deskripsi Kelas";
+                        const td3 = document.createElement("td");
+                        td3.textContent = data.deskripsiKelas;
+                        row3.appendChild(th3);
+                        row3.appendChild(td3);
+
+                        const row4 = document.createElement("tr");
+                        const th4 = document.createElement("th");
+                        th4.textContent = "Nama Guru";
+                        const td4 = document.createElement("td");
+                        td4.textContent = data.namaGuru;
+                        row4.appendChild(th4);
+                        row4.appendChild(td4);
+
+                        tableBody.appendChild(row1);
+                        tableBody.appendChild(row2);
+                        tableBody.appendChild(row3);
+                        tableBody.appendChild(row4);
+
+                        // PDFs
+                        data.pdfs.forEach(pdf => {
+                            const pdfCol = document.createElement("div");
+                            pdfCol.className = "col-md-4";
+                            const pdfCard = document.createElement("div");
+                            pdfCard.className = "card mb-4";
+                            const pdfCardBody = document.createElement("div");
+                            pdfCardBody.className = "card-body";
+                            const pdfTitle = document.createElement("h5");
+                            pdfTitle.className = "card-title";
+                            pdfTitle.textContent = pdf.fileName;
+                            const pdfDownloadButton = document.createElement("a");
+                            pdfDownloadButton.className = "btn btn-primary";
+                            pdfDownloadButton.textContent = "Download";
+                            pdfDownloadButton.href = `http://localhost:3000/api/proses/pdf/download/${data.idKelas}/${pdf.idPdf}`;
+                            pdfDownloadButton.setAttribute('download', pdf.fileName);
+
+                            pdfCardBody.appendChild(pdfTitle);
+                            pdfCardBody.appendChild(pdfDownloadButton);
+                            pdfCard.appendChild(pdfCardBody);
+                            pdfCol.appendChild(pdfCard);
+                            pdfsContainer.appendChild(pdfCol);
+                        });
+
+                        // Item Pembelajarans
+                        data.itemPembelajarans.forEach(item => {
+                            const itemCol = document.createElement("div");
+                            itemCol.className = "col-md-6";
+                            const itemCard = document.createElement("div");
+                            itemCard.className = "card mb-4";
+                            const itemCardBody = document.createElement("div");
+                            itemCardBody.className = "card-body";
+                            const itemId = document.createElement("h5");
+                            itemId.className = "card-title";
+                            itemId.textContent = `ID Pertemuan: ${item.idPertemuan}`;
+                            const itemHeading = document.createElement("h6");
+                            itemHeading.className = "card-subtitle mb-2 text-muted";
+                            itemHeading.textContent = `Heading: ${item.headingPertemuan}`;
+                            const itemBody = document.createElement("p");
+                            itemBody.className = "card-text";
+                            itemBody.textContent = `Body: ${item.bodyPertemuan}`;
+                            const itemFileName = document.createElement("p");
+                            itemFileName.className = "card-text";
+                            itemFileName.textContent = `File: ${item.fileName}`;
+                            const itemVideo = document.createElement("a");
+                            itemVideo.className = "card-link";
+                            itemVideo.href = item.videoPertemuan;
+                            itemVideo.textContent = "Video Link";
+
+                            itemCardBody.appendChild(itemId);
+                            itemCardBody.appendChild(itemHeading);
+                            itemCardBody.appendChild(itemBody);
+                            itemCardBody.appendChild(itemFileName);
+                            itemCardBody.appendChild(itemVideo);
+                            itemCard.appendChild(itemCardBody);
+                            itemCol.appendChild(itemCard);
+                            itemPembelajaransContainer.appendChild(itemCol);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            } else {
+                console.error('ID not provided in URL');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Kelas</title>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: bold;
+        }
+        .navbar-brand {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.5rem;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f9fa;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Learning App Teacher</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html">Profile</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="container mt-5">
+        <h1>List Kelas</h1>
+        <div class="mb-3">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search by Nama Kelas">
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nama Kelas</th>
+                    <th>Deskripsi Kelas</th>
+                    <th>Function</th> <!-- New column for detail link -->
+                </tr>
+            </thead>
+            <tbody id="kelasTableBody">
+                <!-- Data will be inserted here by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const id = 0; // Set the value of id here
+
+            fetch(`http://localhost:3000/api/proses/guru/${id}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const tableBody = document.getElementById("kelasTableBody");
+
+                    // Assuming the API returns an array of kelas objects
+                    data.forEach(kelas => {
+                        const row = document.createElement("tr");
+
+                        const idCell = document.createElement("td");
+                        idCell.textContent = kelas.idKelas;
+
+                        const namaCell = document.createElement("td");
+                        namaCell.textContent = kelas.namaKelas;
+
+                        const deskripsiCell = document.createElement("td");
+                        deskripsiCell.textContent = kelas.deskripsiKelas;
+
+                        const detailCell = document.createElement("td"); // Create a cell for detail link
+                        const detailLink = document.createElement("a");
+                        detailLink.textContent = "Detail";
+                        detailLink.href = `detailKelas.html?id=${kelas.idKelas}`; // Redirect link to detailKelas.html with id parameter
+                        detailCell.appendChild(detailLink);
+
+                        const studentCell = document.createElement("td"); // Create a cell for student link
+                        const studentLink = document.createElement("a");
+                        studentLink.textContent = "Students";
+                        studentLink.href = `student.html?id=${kelas.idKelas}`; // Redirect link to student page with id parameter
+                        studentCell.appendChild(studentLink);
+
+                        row.appendChild(idCell);
+                        row.appendChild(namaCell);
+                        row.appendChild(deskripsiCell);
+                        row.appendChild(detailCell); // Append detail link cell
+                        row.appendChild(studentCell); // Append student link cell
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+
+            // Search functionality
+            document.getElementById('searchInput').addEventListener('input', (event) => {
+                const searchValue = event.target.value.toLowerCase();
+                const rows = document.querySelectorAll('#kelasTableBody tr');
+                rows.forEach(row => {
+                    const namaKelas = row.cells[1].textContent.toLowerCase();
+                    if (namaKelas.includes(searchValue)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

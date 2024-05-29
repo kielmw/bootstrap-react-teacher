@@ -1,0 +1,40 @@
+[
+    {
+        "idPdf": "0",
+        "fileName": "Ezekiel Mashal Wicaksono _Tugas 123 Individu.pdf",
+        "pdfBytes": "My PDF Bytes"
+    }
+]
+
+[
+    {
+        "idKelas": "1",
+        "namaKelas": "bahasa",
+        "deskripsiKelas": "deskripsiKelas1",
+        "namaGuru": "namaGuru1",
+        "idGuru": 0,
+        "pdfs": [
+            {
+                "idPdf": "0",
+                "fileName": "Ezekiel Mashal Wicaksono _Tugas 123 Individu.pdf",
+                "pdfBytes": "My PDF Bytes"
+            }
+            {
+                "idPdf": "1",
+                "fileName": "LABEL.docx",
+                "pdfBytes": "My PDF Bytes"
+            },
+        ],
+        "itemPembelajarans": [
+            {
+                "idPertemuan": "1",
+                "idKelas": "1",
+                "headingPertemuan": "Heading pertemuan 1",
+                "bodyPertemuan": " Body pertemuan 1",
+                "idPdf": "0",
+                "fileName": "Ezekiel Mashal Wicaksono _Tugas 123 Individu.pdf",
+                "videoPertemuan": "Link Youtube"
+            }
+        ]
+    }
+]

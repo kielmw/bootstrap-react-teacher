@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning App Teacher Side</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap">
+    <style>
+        .navbar-brand {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Learning App Teacher</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="pages/profile.html">Profile</a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" href="pages/getKelasById.html">Kelas by IdKelas</a>
+                    </li> -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Jumbotron -->
+    <div class="container mt-5">
+        <div class="jumbotron p-5 bg-light rounded-3">
+            <div class="container">
+                <h1 class="display-4">Welcome to Learning App Teacher Side</h1>
+                <p class="lead">Manage your classes and students with ease.</p>
+                <hr class="my-4">
+                <p>Use the buttons below to navigate through the Teacher functionalities.</p>
+                <a class="btn btn-primary btn-lg" href="pages/getKelas.html" role="button">Manage Classes</a>
+                <!-- <a class="btn btn-secondary btn-lg" href="pages/getKelasById.html" role="button">Search Class by ID</a> -->
+            </div>
+        </div>
+    </div>
+
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+</body>
+</html>
