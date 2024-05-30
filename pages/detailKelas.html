@@ -29,7 +29,6 @@
         .btn-container {
             margin-top: 10px; /* Adjust as needed */
         }
-
         .btn-container .btn {
             margin-right: 10px; /* Adjust as needed */
         }
@@ -61,13 +60,43 @@
                 <!-- Data will be inserted here by JavaScript -->
             </tbody>
         </table>
-        <h2>Files</h2>
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>Files</h2>
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                Upload File
+            </button>
+        </div>
         <div class="pdfs row" id="pdfsContainer">
             <!-- PDFs will be inserted here by JavaScript -->
         </div>
         <h2>Item Pembelajaran</h2>
         <div class="itemPembelajarans row" id="itemPembelajaransContainer">
             <!-- Item Pembelajarans will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadModalLabel">Upload File</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="uploadForm">
+                        <div class="mb-3">
+                            <label for="fileName" class="form-label">File Name</label>
+                            <input type="text" class="form-control" id="fileName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fileInput" class="form-label">Choose File</label>
+                            <input type="file" class="form-control" id="fileInput" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -144,7 +173,7 @@
                             pdfTitle.className = "card-title";
                             pdfTitle.textContent = pdf.fileName;
                             const pdfButtonContainer = document.createElement("div");
-                            pdfButtonContainer.className = "button-container";
+                            pdfButtonContainer.className = "btn-container";
                             const pdfDownloadButton = document.createElement("a");
                             pdfDownloadButton.className = "btn btn-primary";
                             pdfDownloadButton.textContent = "Download";
@@ -166,7 +195,6 @@
                             pdfCol.appendChild(pdfCard);
                             pdfsContainer.appendChild(pdfCol);
                         });
-
 
                         // Item Pembelajarans
                         data.itemPembelajarans.forEach(item => {
@@ -224,7 +252,39 @@
                     .catch(error => console.error('Error deleting file:', error));
                 }
             }
+
+            // Handle file upload form submission
+            document.getElementById("uploadForm").addEventListener("submit", function(event) {
+                event.preventDefault();
+                
+                const fileName = document.getElementById("fileName").value;
+                const fileInput = document.getElementById("fileInput").files[0];
+                
+                if (fileName && fileInput) {
+                    const formData = new FormData();
+                    formData.append("fileName", fileName);
+                    formData.append("file", fileInput);
+                    
+                    fetch(`http://localhost:3500/api/proses/pdf/upload/${id}`, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to upload file');
+                        }
+                        // Close the modal and reload the page after successful upload
+                        document.querySelector("#uploadModal .btn-close").click();
+                        location.reload();
+                    })
+                    .catch(error => console.error('Error uploading file:', error));
+                } else {
+                    alert("Please provide a file name and choose a file.");
+                }
+            });
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js" integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous"></script>    
 </body>
 </html>
