@@ -2,11 +2,12 @@ import express from 'express';
 import cors from 'cors';
 import fetch from 'node-fetch';
 import multer from 'multer';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
+import FormData from 'form-data';
 
 const app = express();
-const upload = multer({ dest: 'uploads/' }); // Configure multer to save files to 'uploads/' directory
+const upload = multer({ dest: 'uploads/' });
 
 // Define the base URL for the external API
 const API_BASE_URL = 'http://localhost:8080/api';
@@ -136,7 +137,7 @@ app.delete('/api/proses/pdf/delete/:idKelas/:idPdf', async (req, res) => {
 // Route to handle PDF upload
 app.post('/api/proses/pdf/upload/:id', upload.single('file'), async (req, res) => {
     const { id } = req.params;
-    const file = req.file; // multer adds the file object to req
+    const file = req.file;
 
     if (!file) {
         return res.status(400).json({ error: 'No file uploaded' });
@@ -149,12 +150,14 @@ app.post('/api/proses/pdf/upload/:id', upload.single('file'), async (req, res) =
     const fileName = path.basename(file.originalname);
 
     formData.append('fileName', fileName);
-    
+
     // Check if the file exists and append it to the FormData
     if (fs.existsSync(file.path)) {
-        const fileStream = fs.createReadStream(file.path);
-        const blob = new Blob([file.buffer], { type: 'application/pdf' }); // Create a Blob object from the file buffer
-        formData.append('file', blob, file.originalname); // Append the Blob object to FormData
+        const fileBuffer = fs.readFileSync(file.path);
+        formData.append('file', fileBuffer, {
+            filename: file.originalname,
+            contentType: file.mimetype
+        });
     } else {
         return res.status(400).json({ error: 'File does not exist' });
     }
@@ -163,7 +166,8 @@ app.post('/api/proses/pdf/upload/:id', upload.single('file'), async (req, res) =
         const response = await fetch(apiUrl, {
             method: 'POST',
             headers: {
-                'ngrok-skip-browser-warning': 'true'
+                'ngrok-skip-browser-warning': 'true',
+                ...formData.getHeaders()
             },
             body: formData
         });
@@ -179,6 +183,7 @@ app.post('/api/proses/pdf/upload/:id', upload.single('file'), async (req, res) =
         res.status(500).json({ error: 'An error occurred while uploading the PDF' });
     }
 });
+
 
 // Start the server on port 3500
 const port = 3500;
