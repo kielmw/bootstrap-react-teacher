@@ -184,6 +184,18 @@ app.post('/api/proses/pdf/upload/:id', upload.single('file'), async (req, res) =
     }
 });
 
+// Route to handle GET requests for /api/proses/itemPembelajaran/get/:idKelas/:idPertemuan
+app.get('/api/proses/itemPembelajaran/get/:idKelas/:idPertemuan', async (req, res) => {
+    const { idKelas, idPertemuan } = req.params;
+    const apiUrl = `${API_BASE_URL}/proses/itemPembelajaran/get/${idKelas}/${idPertemuan}`;
+
+    try {
+        const data = await fetchData(apiUrl);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while fetching data' });
+    }
+});
 
 // Start the server on port 3500
 const port = 3500;
