@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Item Pembelajaran</title>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: bold;
+        }
+        .navbar-brand {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.5rem;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .itemPembelajarans {
+            margin-top: 20px;
+        }
+        .card-title {
+            font-size: 1.25rem;
+        }
+        .card-subtitle {
+            font-size: 1rem;
+        }
+        .card-text {
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Learning App Teacher</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html">Profile</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="container mt-5">
+        <h1>Edit Item Pembelajaran</h1>
+        <div id="errorContainer"></div>
+        <div class="itemPembelajarans row" id="itemPembelajaransContainer">
+            <!-- Item Pembelajarans will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Function to get query parameter value by name
+            function getQueryParameter(name) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(name);
+            }
+
+            const idKelas = getQueryParameter('idKelas'); // Retrieve the idKelas from the URL
+
+            if (idKelas) {
+                fetch(`http://localhost:3500/api/proses/${idKelas}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const itemPembelajaransContainer = document.getElementById("itemPembelajaransContainer");
+
+                        // Item Pembelajarans
+                        data.itemPembelajarans.forEach(item => {
+                            const itemCol = document.createElement("div");
+                            itemCol.className = "col-md-6";
+                            const itemCard = document.createElement("div");
+                            itemCard.className = "card mb-4";
+                            const itemCardBody = document.createElement("div");
+                            itemCardBody.className = "card-body";
+                            const itemId = document.createElement("h5");
+                            itemId.className = "card-title";
+                            itemId.textContent = `ID: ${item.idPertemuan}`;
+                            const itemHeading = document.createElement("h6");
+                            itemHeading.className = "card-subtitle mb-2 text-muted";
+                            itemHeading.textContent = `Heading: ${item.headingPertemuan}`;
+                            const itemBody = document.createElement("p");
+                            itemBody.className = "card-text";
+                            itemBody.textContent = `Body: ${item.bodyPertemuan}`;
+                            const itemFileName = document.createElement("p");
+                            itemFileName.className = "card-text";
+                            itemFileName.textContent = `File: ${item.fileName}`;
+                            const itemVideo = document.createElement("a");
+                            itemVideo.className = "card-link";
+                            itemVideo.href = item.videoPertemuan;
+                            itemVideo.textContent = "Video Link";
+
+                            itemCardBody.appendChild(itemId);
+                            itemCardBody.appendChild(itemHeading);
+                            itemCardBody.appendChild(itemBody);
+                            itemCardBody.appendChild(itemFileName);
+                            itemCardBody.appendChild(itemVideo);
+                            itemCard.appendChild(itemCardBody);
+                            itemCol.appendChild(itemCard);
+                            itemPembelajaransContainer.appendChild(itemCol);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                        const errorContainer = document.getElementById("errorContainer");
+                        errorContainer.innerHTML = `<p class="text-danger">Failed to fetch data. Please try again later.</p>`;
+                    });
+            } else {
+                console.error('idKelas not provided in URL');
+                const errorContainer = document.getElementById("errorContainer");
+                errorContainer.innerHTML = `<p class="text-danger">idKelas not provided in URL</p>`;
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js" integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous"></script>    
+</body>
+</html>
