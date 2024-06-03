@@ -197,6 +197,47 @@ app.get('/api/proses/itemPembelajaran/get/:idKelas/:idPertemuan', async (req, re
     }
 });
 
+// New endpoint to get PDFs for a specific class
+app.get('/api/proses/:idKelas/pdfs', async (req, res) => {
+    const { idKelas } = req.params;
+    const apiUrl = `${API_BASE_URL}/proses/${idKelas}/pdfs`;
+
+    try {
+        const data = await fetchData(apiUrl);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while fetching PDFs' });
+    }
+});
+
+// Route to handle PUT requests for updating itemPembelajaran
+app.put('/api/proses/itemPembelajaran/update/:idKelas/:idPertemuan', async (req, res) => {
+    const { idKelas, idPertemuan } = req.params;
+    const apiUrl = `${API_BASE_URL}/proses/itemPembelajaran/update/${idKelas}/${idPertemuan}`;
+    const updatedItem = req.body;
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
+            },
+            body: JSON.stringify(updatedItem)
+        });
+
+        if (!response.ok) {
+            const errorDetails = await response.text();
+            throw new Error(`Network response was not ok: ${response.statusText}, Details: ${errorDetails}`);
+        }
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error updating itemPembelajaran:', error);
+        res.status(500).json({ error: 'An error occurred while updating the itemPembelajaran' });
+    }
+});
+
 // Start the server on port 3500
 const port = 3500;
 app.listen(port, () => {
