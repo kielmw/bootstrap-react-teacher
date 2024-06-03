@@ -292,6 +292,19 @@ app.post('/api/proses/itemPembelajaran/add/:idKelas', async (req, res) => {
     }
 });
 
+app.get('/api/member/:idKelas', async (req, res) => {
+    const { idKelas } = req.params;
+    const apiUrl = `http://localhost:8080/api/member/${idKelas}`;
+
+    try {
+        const data = await fetchData(apiUrl);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while fetching data' });
+    }
+});
+
+
 // Start the server on port 3500
 const port = 3500;
 app.listen(port, () => {

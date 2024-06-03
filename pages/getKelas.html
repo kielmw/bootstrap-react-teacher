@@ -63,7 +63,8 @@
                     <th>ID</th>
                     <th>Nama Kelas</th>
                     <th>Deskripsi Kelas</th>
-                    <th>Function</th> <!-- New column for detail link -->
+                    <th>Function</th>
+                    <th>Students</th> <!-- New column for student link -->
                 </tr>
             </thead>
             <tbody id="kelasTableBody">
@@ -72,6 +73,24 @@
         </table>
     </div>
 
+    <!-- Modal for Students List -->
+    <div class="modal fade" id="studentsModal" tabindex="-1" aria-labelledby="studentsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="studentsModalLabel">Students List</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul id="studentsList" class="list-group">
+                        <!-- Students IDs will be inserted here by JavaScript -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const id = 0; // Set the value of id here
@@ -86,7 +105,6 @@
                 .then(data => {
                     const tableBody = document.getElementById("kelasTableBody");
 
-                    // Assuming the API returns an array of kelas objects
                     data.forEach(kelas => {
                         const row = document.createElement("tr");
 
@@ -99,23 +117,25 @@
                         const deskripsiCell = document.createElement("td");
                         deskripsiCell.textContent = kelas.deskripsiKelas;
 
-                        const detailCell = document.createElement("td"); // Create a cell for detail link
+                        const detailCell = document.createElement("td");
                         const detailLink = document.createElement("a");
                         detailLink.textContent = "Detail";
-                        detailLink.href = `detailKelas.html?id=${kelas.idKelas}`; // Redirect link to detailKelas.html with id parameter
+                        detailLink.href = `detailKelas.html?id=${kelas.idKelas}`;
                         detailCell.appendChild(detailLink);
 
-                        const studentCell = document.createElement("td"); // Create a cell for student link
+                        const studentCell = document.createElement("td");
                         const studentLink = document.createElement("a");
                         studentLink.textContent = "Students";
-                        studentLink.href = `student.html?id=${kelas.idKelas}`; // Redirect link to student page with id parameter
+                        studentLink.href = "#";
+                        studentLink.dataset.idKelas = kelas.idKelas; // Store idKelas in a data attribute
+                        studentLink.addEventListener('click', handleStudentClick);
                         studentCell.appendChild(studentLink);
 
                         row.appendChild(idCell);
                         row.appendChild(namaCell);
                         row.appendChild(deskripsiCell);
-                        row.appendChild(detailCell); // Append detail link cell
-                        row.appendChild(studentCell); // Append student link cell
+                        row.appendChild(detailCell);
+                        row.appendChild(studentCell);
                         tableBody.appendChild(row);
                     });
                 })
@@ -134,6 +154,36 @@
                     }
                 });
             });
+
+            // Handle student link click
+            function handleStudentClick(event) {
+                event.preventDefault();
+                const idKelas = event.target.dataset.idKelas;
+
+                fetch(`http://localhost:3500/api/member/${idKelas}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const studentsList = document.getElementById("studentsList");
+                        studentsList.innerHTML = '';
+
+                        data.forEach(studentId => {
+                            const listItem = document.createElement("li");
+                            listItem.textContent = studentId;
+                            listItem.className = 'list-group-item';
+                            studentsList.appendChild(listItem);
+                        });
+
+                        // Show the modal
+                        const studentsModal = new bootstrap.Modal(document.getElementById('studentsModal'));
+                        studentsModal.show();
+                    })
+                    .catch(error => console.error('Error fetching student data:', error));
+            }
         });
     </script>
 </body>

@@ -112,7 +112,7 @@
                             itemBody.textContent = `${item.bodyPertemuan}`;
                             const itemFileName = document.createElement("p");
                             itemFileName.className = "card-text";
-                            itemFileName.textContent = `${item.fileName}`;
+                            itemFileName.textContent = item.fileName ? `${item.fileName}` : "No PDF attached";
                             const itemVideo = document.createElement("a");
                             itemVideo.className = "card-link";
                             itemVideo.href = item.videoPertemuan;
