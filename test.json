@@ -38,3 +38,21 @@
         ]
     }
 ]
+
+[
+    {
+        "idPdf": "0",
+        "fileName": "Ezekiel Mashal Wicaksono _Tugas 123 Individu.pdf",
+        "pdfBytes": "here is my pdfBytes"
+    },
+    {
+        "idPdf": "1",
+        "fileName": "LABEL.docx",
+        "pdfBytes": "here is my pdfBytes"
+    },
+    {
+        "idPdf": "2",
+        "fileName": "Testing.csv",
+        "pdfBytes": "aWQsZW1haWxfaWQsbmFtZQo="
+    }
+]

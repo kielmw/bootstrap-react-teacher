@@ -238,6 +238,60 @@ app.put('/api/proses/itemPembelajaran/update/:idKelas/:idPertemuan', async (req,
     }
 });
 
+// Route to handle DELETE requests for deleting itemPembelajaran
+app.delete('/api/proses/itemPembelajaran/delete/:idKelas/:idPertemuan', async (req, res) => {
+    const { idKelas, idPertemuan } = req.params;
+    const apiUrl = `${API_BASE_URL}/proses/itemPembelajaran/delete/${idKelas}/${idPertemuan}`;
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'DELETE',
+            headers: {
+                'ngrok-skip-browser-warning': 'true'
+            }
+        });
+
+        if (!response.ok) {
+            const errorDetails = await response.text();
+            throw new Error(`Network response was not ok: ${response.statusText}, Details: ${errorDetails}`);
+        }
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error deleting itemPembelajaran:', error);
+        res.status(500).json({ error: 'An error occurred while deleting the itemPembelajaran' });
+    }
+});
+
+
+// Route to handle POST requests for adding new itemPembelajaran
+app.post('/api/proses/itemPembelajaran/add/:idKelas', async (req, res) => {
+    const { idKelas } = req.params;
+    const apiUrl = `${API_BASE_URL}/proses/itemPembelajaran/add/${idKelas}`;
+    const newItem = req.body;
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
+            },
+            body: JSON.stringify(newItem)
+        });
+
+        if (!response.ok) {
+            const errorDetails = await response.text();
+            throw new Error(`Network response was not ok: ${response.statusText}, Details: ${errorDetails}`);
+        }
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error adding itemPembelajaran:', error);
+        res.status(500).json({ error: 'An error occurred while adding the itemPembelajaran' });
+    }
+});
+
 // Start the server on port 3500
 const port = 3500;
 app.listen(port, () => {

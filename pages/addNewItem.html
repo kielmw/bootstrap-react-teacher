@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Item Pembelajaran</title>
+    <title>Add New Item Pembelajaran</title>
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <style>
@@ -28,9 +28,13 @@
 
     <!-- Content -->
     <div class="container mt-5">
-        <h1>Edit Item Pembelajaran</h1>
+        <h1>Add New Item Pembelajaran</h1>
         <div id="errorContainer"></div>
-        <form id="editItemForm">
+        <form id="addItemForm">
+            <div class="form-group">
+                <label for="idPertemuan">ID Pertemuan</label>
+                <input type="text" class="form-control" id="idPertemuan" name="idPertemuan" required>
+            </div>
             <div class="form-group">
                 <label for="headingPertemuan">Heading Pertemuan</label>
                 <input type="text" class="form-control" id="headingPertemuan" name="headingPertemuan" required>
@@ -49,19 +53,27 @@
                     <!-- Radio buttons for idPdf will be inserted here by JavaScript -->
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Update Item Pembelajaran</button>
+            <div class="form-group">
+                <!-- Null option -->
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="idPdf" id="pdf_null" value="">
+                    <label class="form-check-label" for="pdf_null">None</label>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">Add Item Pembelajaran</button>
         </form>
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
-            const idPertemuan = urlParams.get('idPertemuan');
             const idKelas = urlParams.get('idKelas');
-            let itemData;
+            let pdfList;
 
-            if (idPertemuan && idKelas) {
-                fetch(`http://localhost:3500/api/proses/itemPembelajaran/get/${idKelas}/${idPertemuan}`)
+            if (idKelas) {
+                fetch(`http://localhost:3500/api/proses/${idKelas}/pdfs`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -69,44 +81,10 @@
                         return response.json();
                     })
                     .then(data => {
-                        itemData = data;
-                        document.getElementById("headingPertemuan").value = data.headingPertemuan;
-                        document.getElementById("bodyPertemuan").value = data.bodyPertemuan;
-                        document.getElementById("videoPertemuan").value = data.videoPertemuan;
-                        
-                        // Fetch available PDFs
-                        return fetch(`http://localhost:3500/api/proses/${idKelas}/pdfs`);
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(pdfList => {
+                        pdfList = data;
                         const pdfOptionsContainer = document.getElementById("pdfOptions");
 
-                        // Add "None" option for PDF selection
-                        const noneOptionDiv = document.createElement("div");
-                        noneOptionDiv.className = "form-check";
-                        const noneOptionInput = document.createElement("input");
-                        noneOptionInput.className = "form-check-input";
-                        noneOptionInput.type = "radio";
-                        noneOptionInput.name = "idPdf";
-                        noneOptionInput.id = "pdf_none";
-                        noneOptionInput.value = "";
-                        if (!itemData.idPdf) {
-                            noneOptionInput.checked = true;
-                        }
-                        const noneOptionLabel = document.createElement("label");
-                        noneOptionLabel.className = "form-check-label";
-                        noneOptionLabel.htmlFor = "pdf_none";
-                        noneOptionLabel.textContent = "None";
-
-                        noneOptionDiv.appendChild(noneOptionInput);
-                        noneOptionDiv.appendChild(noneOptionLabel);
-                        pdfOptionsContainer.appendChild(noneOptionDiv);
-
+                        // Add radio buttons for selecting PDFs
                         pdfList.forEach(pdf => {
                             const radioDiv = document.createElement("div");
                             radioDiv.className = "form-check";
@@ -116,9 +94,6 @@
                             radioInput.name = "idPdf";
                             radioInput.id = `pdf_${pdf.idPdf}`;
                             radioInput.value = pdf.idPdf;
-                            if (pdf.idPdf === itemData.idPdf) {
-                                radioInput.checked = true;
-                            }
                             const radioLabel = document.createElement("label");
                             radioLabel.className = "form-check-label";
                             radioLabel.htmlFor = `pdf_${pdf.idPdf}`;
@@ -130,49 +105,46 @@
                         });
                     })
                     .catch(error => {
-                        console.error('Error fetching data:', error);
+                        console.error('Error fetching PDFs:', error);
                         const errorContainer = document.getElementById("errorContainer");
-                        errorContainer.innerHTML = `<p class="text-danger">Failed to fetch data. Please try again later.</p>`;
+                        errorContainer.innerHTML = `<p class="text-danger">Failed to fetch PDFs. Please try again later.</p>`;
                     });
 
-                document.getElementById("editItemForm").addEventListener("submit", function(event) {
+                document.getElementById("addItemForm").addEventListener("submit", function(event) {
                     event.preventDefault();
                     
                     const formData = new FormData(this);
-                    const editedItem = Object.fromEntries(formData.entries());
+                    const newItem = Object.fromEntries(formData.entries());
 
-                    // Add idPertemuan to the editedItem
-                    editedItem.idPertemuan = idPertemuan;
-                    
-                    // If no PDF is selected, set idPdf to null
-                    if (!editedItem.idPdf) {
-                        editedItem.idPdf = null;
+                    // Handle the case where idPdf is an empty string
+                    if (newItem.idPdf === "") {
+                        newItem.idPdf = null;
                     }
 
-                    fetch(`http://localhost:3500/api/proses/itemPembelajaran/update/${idKelas}/${idPertemuan}`, {
-                        method: 'PUT',
+                    fetch(`http://localhost:3500/api/proses/itemPembelajaran/add/${idKelas}`, {
+                        method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify(editedItem)
+                        body: JSON.stringify(newItem)
                     })
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
                         }
-                        alert("Item Pembelajaran updated successfully!");
+                        alert("Item Pembelajaran added successfully!");
                         window.location.href = `showItemPembelajaran.html?idKelas=${idKelas}`;
                     })
                     .catch(error => {
-                        console.error('Error updating data:', error);
+                        console.error('Error adding item:', error);
                         const errorContainer = document.getElementById("errorContainer");
-                        errorContainer.innerHTML = `<p class="text-danger">Failed to update data. Please try again later.</p>`;
+                        errorContainer.innerHTML = `<p class="text-danger">Failed to add item. Please try again later.</p>`;
                     });
                 });
             } else {
-                console.error('idPertemuan or idKelas not provided in URL');
+                console.error('idKelas not provided in URL');
                 const errorContainer = document.getElementById("errorContainer");
-                errorContainer.innerHTML = `<p class="text-danger">idPertemuan or idKelas not provided in URL</p>`;
+                errorContainer.innerHTML = `<p class="text-danger">idKelas not provided in URL</p>`;
             }
         });
     </script>
