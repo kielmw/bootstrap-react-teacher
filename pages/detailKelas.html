@@ -240,7 +240,7 @@
         });
 
         function removeFile(idKelas, idPdf) {
-            fetch(`http://localhost:3500/api/proses/pdf/${idKelas}/${idPdf}`, {
+            fetch(`http://localhost:3500/api/proses/pdf/delete/${idKelas}/${idPdf}`, {
                 method: 'DELETE'
             })
             .then(response => {
@@ -260,12 +260,13 @@
 
             const fileName = document.getElementById("fileName").value;
             const fileInput = document.getElementById("fileInput").files[0];
+            const idKelas = getQueryParameter('id');
 
             const formData = new FormData();
             formData.append("fileName", fileName);
             formData.append("file", fileInput);
 
-            fetch(`http://localhost:3500/api/proses/pdf/${idKelas}`, {
+            fetch(`http://localhost:3500/api/proses/pdf/upload/${idKelas}`, {
                 method: 'POST',
                 body: formData
             })
