@@ -10,7 +10,7 @@ const app = express();
 const upload = multer({ dest: 'uploads/' });
 
 // Define the base URL for the external API
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = 'https://eee9-182-253-50-135.ngrok-free.app/api';
 
 app.use(cors({
     origin: 'http://127.0.0.1:5555' // Allow requests from this origin
