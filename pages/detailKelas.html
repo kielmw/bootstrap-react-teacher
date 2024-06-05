@@ -107,160 +107,181 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            function getQueryParameter(name) {
-                const urlParams = new URLSearchParams(window.location.search);
-                return urlParams.get(name);
-            }
+    function getQueryParameter(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
 
-            const idKelas = getQueryParameter('id'); // Retrieve the idKelas from the URL
+    const idKelas = getQueryParameter('id'); // Retrieve the idKelas from the URL
 
-            if (idKelas) {
-                fetch(`http://localhost:3500/api/proses/${idKelas}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        const tableBody = document.querySelector("#kelasDetailTable tbody");
-                        const pdfsContainer = document.getElementById("pdfsContainer");
-                        const itemPembelajaransContainer = document.getElementById("itemPembelajaransContainer");
-
-                        const row1 = document.createElement("tr");
-                        const th1 = document.createElement("th");
-                        th1.textContent = "ID";
-                        const td1 = document.createElement("td");
-                        td1.textContent = data.idKelas;
-                        row1.appendChild(th1);
-                        row1.appendChild(td1);
-
-                        const row2 = document.createElement("tr");
-                        const th2 = document.createElement("th");
-                        th2.textContent = "Nama Kelas";
-                        const td2 = document.createElement("td");
-                        td2.textContent = data.namaKelas;
-                        row2.appendChild(th2);
-                        row2.appendChild(td2);
-
-                        const row3 = document.createElement("tr");
-                        const th3 = document.createElement("th");
-                        th3.textContent = "Deskripsi Kelas";
-                        const td3 = document.createElement("td");
-                        td3.textContent = data.deskripsiKelas;
-                        row3.appendChild(th3);
-                        row3.appendChild(td3);
-
-                        const row4 = document.createElement("tr");
-                        const th4 = document.createElement("th");
-                        th4.textContent = "Nama Guru";
-                        const td4 = document.createElement("td");
-                        td4.textContent = data.namaGuru;
-                        row4.appendChild(th4);
-                        row4.appendChild(td4);
-
-                        tableBody.appendChild(row1);
-                        tableBody.appendChild(row2);
-                        tableBody.appendChild(row3);
-                        tableBody.appendChild(row4);
-
-                        data.pdfs.forEach(pdf => {
-                            const pdfCol = document.createElement("div");
-                            pdfCol.className = "col-md-4";
-                            const pdfCard = document.createElement("div");
-                            pdfCard.className = "card mb-4";
-                            const pdfCardBody = document.createElement("div");
-                            pdfCardBody.className = "card-body";
-                            const pdfTitle = document.createElement("h5");
-                            pdfTitle.className = "card-title";
-                            pdfTitle.textContent = pdf.fileName;
-                            const pdfButtonContainer = document.createElement("div");
-                            pdfButtonContainer.className = "btn-container";
-                            const pdfDownloadButton = document.createElement("a");
-                            pdfDownloadButton.className = "btn btn-primary";
-                            pdfDownloadButton.textContent = "Download";
-                            pdfDownloadButton.href = `http://localhost:3500/api/proses/pdf/download/${data.idKelas}/${pdf.idPdf}`;
-                            pdfDownloadButton.setAttribute('download', pdf.fileName);
-                            const pdfDeleteButton = document.createElement("button");
-                            pdfDeleteButton.className = "btn btn-danger";
-                            pdfDeleteButton.textContent = "Delete";
-                            pdfDeleteButton.addEventListener("click", () => {
-                                removeFile(data.idKelas, pdf.idPdf);
-                            });
-
-                            pdfButtonContainer.appendChild(pdfDownloadButton);
-                            pdfButtonContainer.appendChild(pdfDeleteButton);
-
-                            pdfCardBody.appendChild(pdfTitle);
-                            pdfCardBody.appendChild(pdfButtonContainer);
-                            pdfCard.appendChild(pdfCardBody);
-                            pdfCol.appendChild(pdfCard);
-                            pdfsContainer.appendChild(pdfCol);
-                        });
-
-                        data.itemPembelajarans.forEach(item => {
-                            const itemCol = document.createElement("div");
-                            itemCol.className = "col-md-6";
-                            const itemCard = document.createElement("div");
-                            itemCard.className = "card mb-4";
-                            const itemCardBody = document.createElement("div");
-                            itemCardBody.className = "card-body";
-                            const itemId = document.createElement("h5");
-                            itemId.className = "card-title";
-                            //itemId.textContent = `ID: ${item.idPertemuan}`;
-                            const itemHeading = document.createElement("h6");
-                            itemHeading.className = "card-subtitle mb-2 text-muted";
-                            itemHeading.textContent = item.headingPertemuan;
-                            const itemDescription = document.createElement("p");
-                            itemDescription.className = "card-text";
-                            itemDescription.textContent = item.bodyPertemuan;
-                            const itemDate = document.createElement("p");
-                            itemDate.className = "card-text";
-                            itemDate.textContent = `Tanggal: ${item.tanggal}`;
-                            const itemDuration = document.createElement("p");
-
-                            itemCardBody.appendChild(itemId);
-                            itemCardBody.appendChild(itemHeading);
-                            itemCardBody.appendChild(itemDescription);
-                            itemCard.appendChild(itemCardBody);
-                            itemCol.appendChild(itemCard);
-                            itemPembelajaransContainer.appendChild(itemCol);
-                        });
-
-                        document.getElementById("showItemsButton").addEventListener("click", () => {
-                            window.location.href = `showItemPembelajaran.html?idKelas=${idKelas}`;
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            } else {
-                console.error('No idKelas parameter found in the URL');
-            }
-        });
-
-        function removeFile(idKelas, idPdf) {
-            fetch(`http://localhost:3500/api/proses/pdf/delete/${idKelas}/${idPdf}`, {
-                method: 'DELETE'
-            })
+    if (idKelas) {
+        fetch(`http://localhost:3500/api/proses/${idKelas}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                // Optionally refresh the page or update the UI to remove the deleted file
-                location.reload();
+                return response.json();
+            })
+            .then(data => {
+                const tableBody = document.querySelector("#kelasDetailTable tbody");
+                const pdfsContainer = document.getElementById("pdfsContainer");
+                const itemPembelajaransContainer = document.getElementById("itemPembelajaransContainer");
+
+                const row1 = document.createElement("tr");
+                const th1 = document.createElement("th");
+                th1.textContent = "ID";
+                const td1 = document.createElement("td");
+                td1.textContent = data.idKelas;
+                row1.appendChild(th1);
+                row1.appendChild(td1);
+
+                const row2 = document.createElement("tr");
+                const th2 = document.createElement("th");
+                th2.textContent = "Nama Kelas";
+                const td2 = document.createElement("td");
+                td2.textContent = data.namaKelas;
+                row2.appendChild(th2);
+                row2.appendChild(td2);
+
+                const row3 = document.createElement("tr");
+                const th3 = document.createElement("th");
+                th3.textContent = "Deskripsi Kelas";
+                const td3 = document.createElement("td");
+                td3.textContent = data.deskripsiKelas;
+                row3.appendChild(th3);
+                row3.appendChild(td3);
+
+                const row4 = document.createElement("tr");
+                const th4 = document.createElement("th");
+                th4.textContent = "Nama Guru";
+                const td4 = document.createElement("td");
+                td4.textContent = data.namaGuru;
+                row4.appendChild(th4);
+                row4.appendChild(td4);
+
+                tableBody.appendChild(row1);
+                tableBody.appendChild(row2);
+                tableBody.appendChild(row3);
+                tableBody.appendChild(row4);
+
+                data.pdfs.forEach(pdf => {
+                    const pdfCol = document.createElement("div");
+                    pdfCol.className = "col-md-4";
+                    const pdfCard = document.createElement("div");
+                    pdfCard.className = "card mb-4";
+                    const pdfCardBody = document.createElement("div");
+                    pdfCardBody.className = "card-body";
+                    const pdfTitle = document.createElement("h5");
+                    pdfTitle.className = "card-title";
+                    pdfTitle.textContent = pdf.fileName;
+                    const pdfButtonContainer = document.createElement("div");
+                    pdfButtonContainer.className = "btn-container";
+                    const pdfDownloadButton = document.createElement("a");
+                    pdfDownloadButton.className = "btn btn-primary";
+                    pdfDownloadButton.textContent = "Download";
+                    pdfDownloadButton.href = `http://localhost:3500/api/proses/pdf/download/${data.idKelas}/${pdf.idPdf}`;
+                    pdfDownloadButton.setAttribute('download', pdf.fileName);
+                    const pdfDeleteButton = document.createElement("button");
+                    pdfDeleteButton.className = "btn btn-danger";
+                    pdfDeleteButton.textContent = "Delete";
+                    pdfDeleteButton.addEventListener("click", () => {
+                        removeFile(data.idKelas, pdf.idPdf);
+                    });
+
+                    pdfButtonContainer.appendChild(pdfDownloadButton);
+                    pdfButtonContainer.appendChild(pdfDeleteButton);
+
+                    pdfCardBody.appendChild(pdfTitle);
+                    pdfCardBody.appendChild(pdfButtonContainer);
+                    pdfCard.appendChild(pdfCardBody);
+                    pdfCol.appendChild(pdfCard);
+                    pdfsContainer.appendChild(pdfCol);
+                });
+
+                data.itemPembelajarans.forEach(item => {
+                    const itemCol = document.createElement("div");
+                    itemCol.className = "col-md-6";
+                    const itemCard = document.createElement("div");
+                    itemCard.className = "card mb-4";
+                    const itemCardBody = document.createElement("div");
+                    itemCardBody.className = "card-body";
+                    const itemId = document.createElement("h5");
+                    itemId.className = "card-title";
+                    const itemHeading = document.createElement("h6");
+                    itemHeading.className = "card-subtitle mb-2 text-muted";
+                    itemHeading.textContent = item.headingPertemuan;
+                    const itemDescription = document.createElement("p");
+                    itemDescription.className = "card-text";
+                    itemDescription.textContent = item.bodyPertemuan;
+
+                    itemCardBody.appendChild(itemId);
+                    itemCardBody.appendChild(itemHeading);
+                    itemCardBody.appendChild(itemDescription);
+                    itemCard.appendChild(itemCardBody);
+                    itemCol.appendChild(itemCard);
+                    itemPembelajaransContainer.appendChild(itemCol);
+                });
+
+                document.getElementById("showItemsButton").addEventListener("click", () => {
+                    window.location.href = `showItemPembelajaran.html?idKelas=${idKelas}`;
+                });
             })
             .catch(error => {
                 console.error('Error:', error);
             });
-        }
 
         document.getElementById("uploadForm").addEventListener("submit", function(event) {
             event.preventDefault();
 
             const fileName = document.getElementById("fileName").value;
             const fileInput = document.getElementById("fileInput").files[0];
-            const idKelas = getQueryParameter('id');
+
+            const formData = new FormData();
+            formData.append("fileName", fileName);
+            formData.append("file", fileInput);
+
+            fetch(`http://localhost:3500/api/proses/pdf/upload/${idKelas}`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                // Optionally refresh the page or update the UI to show the new file
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    } else {
+        console.error('No idKelas parameter found in the URL');
+    }
+});
+
+function removeFile(idKelas, idPdf) {
+    fetch(`http://localhost:3500/api/proses/pdf/delete/${idKelas}/${idPdf}`, {
+        method: 'DELETE'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        // Optionally refresh the page or update the UI to remove the deleted file
+        location.reload();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+
+        document.getElementById("uploadForm").addEventListener("submit", function(event,idKelas) {
+            event.preventDefault();
+
+            const fileName = document.getElementById("fileName").value;
+            const fileInput = document.getElementById("fileInput").files[0];
 
             const formData = new FormData();
             formData.append("fileName", fileName);
