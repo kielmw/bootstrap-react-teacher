@@ -10,7 +10,8 @@ const app = express();
 const upload = multer({ dest: 'uploads/' });
 
 // Define the base URL for the external API
-const API_BASE_URL = 'https://eee9-182-253-50-135.ngrok-free.app/api';
+const API_BASE_URL = 'http://localhost:8080/api';
+const STUDENT_API_BASE_URL = 'http://localhost:9090/api';
 
 app.use(cors({
     origin: 'http://127.0.0.1:5555' // Allow requests from this origin
@@ -263,7 +264,6 @@ app.delete('/api/proses/itemPembelajaran/delete/:idKelas/:idPertemuan', async (r
     }
 });
 
-
 // Route to handle POST requests for adding new itemPembelajaran
 app.post('/api/proses/itemPembelajaran/add/:idKelas', async (req, res) => {
     const { idKelas } = req.params;
@@ -292,15 +292,56 @@ app.post('/api/proses/itemPembelajaran/add/:idKelas', async (req, res) => {
     }
 });
 
+// Route to handle GET requests for /api/member/:idKelas
 app.get('/api/member/:idKelas', async (req, res) => {
     const { idKelas } = req.params;
-    const apiUrl = `http://localhost:8080/api/member/${idKelas}`;
+    const apiUrl = `${API_BASE_URL}/member/${idKelas}`;
 
     try {
         const data = await fetchData(apiUrl);
         res.json(data);
     } catch (error) {
         res.status(500).json({ error: 'An error occurred while fetching data' });
+    }
+});
+
+// Route to handle GET requests for /api/kontrol-kelas-student
+app.get('/api/kontrol-kelas-student/:idKelas/:studentId', async (req, res) => {
+    const { idKelas, studentId } = req.params;
+    const apiUrl = `${STUDENT_API_BASE_URL}/kontrol-kelas-student/${idKelas}/${studentId}`;
+
+    try {
+        const data = await fetchData(apiUrl);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while fetching student control data' });
+    }
+});
+
+app.put('/api/kontrol-kelas-student/:idKelas/:studentId', async (req, res) => {
+    const { idKelas, studentId } = req.params;
+    const apiUrl = `${STUDENT_API_BASE_URL}/kontrol-kelas-student/${idKelas}/${studentId}`;
+    const updatedNilaiAkhir = req.body.nilaiAkhir;
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
+            },
+            body: JSON.stringify({ kontrolKelas: idKelas, student: studentId, nilaiAkhir: updatedNilaiAkhir })
+        });
+
+        if (!response.ok) {
+            const errorDetails = await response.text();
+            throw new Error(`Network response was not ok: ${response.statusText}, Details: ${errorDetails}`);
+        }
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error updating nilaiAkhir:', error);
+        res.status(500).json({ error: 'An error occurred while updating nilaiAkhir' });
     }
 });
 

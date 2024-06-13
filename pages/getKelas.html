@@ -31,6 +31,24 @@
         .search-container {
             margin-bottom: 20px;
         }
+        .rounded-pill {
+            border-radius: 50px;
+            display: inline-block;
+        }
+
+        .small {
+            font-size: 0.8rem; /* Adjust size as needed */
+        }
+
+        .italic {
+            font-style: italic;
+        }
+
+        .student-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -64,7 +82,8 @@
                     <th>Nama Kelas</th>
                     <th>Deskripsi Kelas</th>
                     <th>Function</th>
-                    <th>Students</th> <!-- New column for student link -->
+                    <th>Students</th>
+                    <th>Score</th> <!-- New column for score -->
                 </tr>
             </thead>
             <tbody id="kelasTableBody">
@@ -93,7 +112,7 @@
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const id = 0; // Set the value of id here
+            const id = 234567890; // Set the value of id here
 
             fetch(`http://localhost:3500/api/proses/guru/${id}`)
                 .then(response => {
@@ -131,11 +150,18 @@
                         studentLink.addEventListener('click', handleStudentClick);
                         studentCell.appendChild(studentLink);
 
+                        const scoreCell = document.createElement("td");
+                        const scoreLink = document.createElement("a");
+                        scoreLink.textContent = "Score";
+                        scoreLink.href = `detailNilai.html?id=${kelas.idKelas}`; // Link to detailNilai.html
+                        scoreCell.appendChild(scoreLink);
+
                         row.appendChild(idCell);
                         row.appendChild(namaCell);
                         row.appendChild(deskripsiCell);
                         row.appendChild(detailCell);
                         row.appendChild(studentCell);
+                        row.appendChild(scoreCell); // Append the scoreCell
                         tableBody.appendChild(row);
                     });
                 })
@@ -171,16 +197,43 @@
                         const studentsList = document.getElementById("studentsList");
                         studentsList.innerHTML = '';
 
-                        data.forEach(studentId => {
-                            const listItem = document.createElement("li");
-                            listItem.textContent = studentId;
-                            listItem.className = 'list-group-item';
-                            studentsList.appendChild(listItem);
+                        // Process each student ID and fetch their nilaiAkhir
+                        const studentPromises = data.map(studentId => {
+                            return fetch(`http://localhost:3500/api/kontrol-kelas-student/${idKelas}/${studentId}`)
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return response.json();
+                                })
+                                .then(studentData => {
+                                    const listItem = document.createElement("li");
+                                    listItem.className = 'list-group-item';
+
+                                    const studentInfo = document.createElement("div");
+                                    studentInfo.classList.add("student-info");
+
+                                    const nim = document.createElement("span");
+                                    nim.textContent = `${studentId}`;
+                                    studentInfo.appendChild(nim);
+
+                                    const nilaiAkhir = document.createElement("span");
+                                    nilaiAkhir.textContent = `Nilai Akhir: ${studentData.nilaiAkhir}`;
+                                    nilaiAkhir.classList.add("rounded-pill", "bg-info", "text-white", "p-1", "small", "italic");
+                                    studentInfo.appendChild(nilaiAkhir);
+
+                                    listItem.appendChild(studentInfo);
+                                    studentsList.appendChild(listItem);
+                                });
                         });
 
-                        // Show the modal
-                        const studentsModal = new bootstrap.Modal(document.getElementById('studentsModal'));
-                        studentsModal.show();
+                        // Wait for all promises to resolve before showing the modal
+                        Promise.all(studentPromises)
+                            .then(() => {
+                                const studentsModal = new bootstrap.Modal(document.getElementById('studentsModal'));
+                                studentsModal.show();
+                            })
+                            .catch(error => console.error('Error fetching student data:', error));
                     })
                     .catch(error => console.error('Error fetching student data:', error));
             }
