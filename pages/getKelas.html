@@ -224,6 +224,26 @@
 
                                     listItem.appendChild(studentInfo);
                                     studentsList.appendChild(listItem);
+                                })
+                                .catch(error => {
+                                    // Handle the error for individual student data fetch
+                                    const listItem = document.createElement("li");
+                                    listItem.className = 'list-group-item';
+
+                                    const studentInfo = document.createElement("div");
+                                    studentInfo.classList.add("student-info");
+
+                                    const nim = document.createElement("span");
+                                    nim.textContent = `${studentId}`;
+                                    studentInfo.appendChild(nim);
+
+                                    const errorMessage = document.createElement("span");
+                                    errorMessage.textContent = `Nilai Akhir: N/A`;
+                                    errorMessage.classList.add("rounded-pill", "bg-warning", "text-white", "p-1", "small", "italic");
+                                    studentInfo.appendChild(errorMessage);
+
+                                    listItem.appendChild(studentInfo);
+                                    studentsList.appendChild(listItem);
                                 });
                         });
 
