@@ -139,15 +139,27 @@
 
                                 const nilaiAkhirInput = document.createElement("input");
                                 nilaiAkhirInput.classList.add("form-control", "nilai-input");
-                                nilaiAkhirInput.type = "text";
+                                nilaiAkhirInput.type = "number";
+                                nilaiAkhirInput.min = "0";
+                                nilaiAkhirInput.max = "100";
                                 nilaiAkhirInput.value = studentData.nilaiAkhir;
+
+                                // Add event listener to ensure input values stay within range
+                                nilaiAkhirInput.addEventListener('input', (e) => {
+                                    if (e.target.value > 100) e.target.value = 100;
+                                    if (e.target.value < 0) e.target.value = 0;
+                                });
 
                                 const editButton = document.createElement("button");
                                 editButton.classList.add("btn", "btn-primary");
                                 editButton.textContent = "Edit";
                                 editButton.addEventListener('click', () => {
                                     const updatedNilaiAkhir = nilaiAkhirInput.value;
-                                    updateNilaiAkhir(studentId, updatedNilaiAkhir);
+                                    if (updatedNilaiAkhir < 0 || updatedNilaiAkhir > 100) {
+                                        alert('Nilai Akhir must be between 0 and 100.');
+                                    } else {
+                                        updateNilaiAkhir(studentId, updatedNilaiAkhir);
+                                    }
                                 });
 
                                 inputGroup.appendChild(nilaiAkhirInput);
