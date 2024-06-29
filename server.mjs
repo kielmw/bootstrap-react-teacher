@@ -14,7 +14,7 @@ const API_BASE_URL = 'http://localhost:8080/api';
 const STUDENT_API_BASE_URL = 'http://localhost:9090/api';
 
 app.use(cors({
-    origin: 'http://127.0.0.1:5555' // Allow requests from this origin
+    origin: 'http://127.0.0.1:5501' // Allow requests from this origin
 }));
 
 // Middleware to parse JSON bodies

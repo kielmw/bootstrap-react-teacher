@@ -1,58 +1,34 @@
-[
-    {
-        "idPdf": "0",
-        "fileName": "Ezekiel Mashal Wicaksono _Tugas 123 Individu.pdf",
-        "pdfBytes": "My PDF Bytes"
-    }
-]
-
-[
-    {
-        "idKelas": "1",
-        "namaKelas": "bahasa",
-        "deskripsiKelas": "deskripsiKelas1",
-        "namaGuru": "namaGuru1",
-        "idGuru": 0,
-        "pdfs": [
-            {
-                "idPdf": "0",
-                "fileName": "Ezekiel Mashal Wicaksono _Tugas 123 Individu.pdf",
-                "pdfBytes": "My PDF Bytes"
-            }
-            {
-                "idPdf": "1",
-                "fileName": "LABEL.docx",
-                "pdfBytes": "My PDF Bytes"
-            },
-        ],
-        "itemPembelajarans": [
-            {
-                "idPertemuan": "1",
-                "idKelas": "1",
-                "headingPertemuan": "Heading pertemuan 1",
-                "bodyPertemuan": " Body pertemuan 1",
-                "idPdf": "0",
-                "fileName": "Ezekiel Mashal Wicaksono _Tugas 123 Individu.pdf",
-                "videoPertemuan": "Link Youtube"
-            }
-        ]
-    }
-]
-
-[
-    {
-        "idPdf": "0",
-        "fileName": "Ezekiel Mashal Wicaksono _Tugas 123 Individu.pdf",
-        "pdfBytes": "here is my pdfBytes"
-    },
-    {
-        "idPdf": "1",
-        "fileName": "LABEL.docx",
-        "pdfBytes": "here is my pdfBytes"
-    },
-    {
-        "idPdf": "2",
-        "fileName": "Testing.csv",
-        "pdfBytes": "aWQsZW1haWxfaWQsbmFtZQo="
-    }
-]
+{
+    "idKelas": "1",
+    "namaKelas": "Struktur Data",
+    "deskripsiKelas": "Deskripsi kelas StrukturData",
+    "namaGuru": "Teacher 3",
+    "idGuru": 234567890,
+    "pdfs": [
+        {
+            "idPdf": "0",
+            "fileName": "Ezekiel Mashal Wicaksono _Tugas 123 Individu.pdf",
+            "pdfBytes": "pdfBytes"
+        }
+    ],
+    "itemPembelajarans": [
+        {
+            "idPertemuan": "1",
+            "idKelas": "1",
+            "headingPertemuan": "Pengenalan Struktur Data",
+            "bodyPertemuan": "Struktur data merupakan matakuliah yang terdapat dalam jurusan Informatika",
+            "idPdf": "0",
+            "fileName": "Ezekiel Mashal Wicaksono _Tugas 123 Individu.pdf",
+            "videoPertemuan": "https://youtu.be/KOQIQfZhQC8?si=M86O5YFsKgpkNyr-"
+        },
+        {
+            "idPertemuan": "2",
+            "idKelas": "1",
+            "headingPertemuan": "Struktur data dalam Java",
+            "bodyPertemuan": "Pengembangan struktur data menggunakan java merupakan metode umum yang sering dipakai",
+            "idPdf": null,
+            "fileName": null,
+            "videoPertemuan": "https://youtu.be/C09XYSyTVTY?si=F_dhOg0q5oCuSfkZ"
+        }
+    ]
+}

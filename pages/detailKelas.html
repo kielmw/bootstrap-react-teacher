@@ -240,13 +240,17 @@
                     })
                     .then(response => {
                         if (!response.ok) {
-                            throw new Error('Network response was not ok');
+                            return response.json().then(errData => {
+                                throw new Error(errData.error || 'Network response was not ok');
+                            });
                         }
                         // Optionally refresh the page or update the UI to show the new file
                         location.reload();
                     })
                     .catch(error => {
                         console.error('Error:', error);
+                        alert('File upload failed: ' + error.message);
+                        window.location.href = `detailKelas.html?id=${idKelas}`; // Redirect back to the detail page
                     });
                 });
             } else {
