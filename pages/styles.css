@@ -1,0 +1,44 @@
+/* styles.css */
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+}
+.navbar-brand {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.5rem;
+}
+table {
+    width: 100%;
+    margin-top: 20px;
+}
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+th {
+    background-color: #f8f9fa;
+}
+.search-container {
+    margin-bottom: 20px;
+}
+.rounded-pill {
+    border-radius: 50px;
+    display: inline-block;
+}
+
+.small {
+    font-size: 0.8rem; /* Adjust size as needed */
+}
+
+.italic {
+    font-style: italic;
+}
+
+.student-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

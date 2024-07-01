@@ -26,9 +26,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="pages/profile.html">Profile</a>
                     </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link" href="pages/getKelasById.html">Kelas by IdKelas</a>
-                    </li> -->
                 </ul>
             </div>
         </div>
@@ -41,13 +38,51 @@
                 <h1 class="display-4">Welcome to Learning App Teacher Side</h1>
                 <p class="lead">Manage your classes and students with ease.</p>
                 <hr class="my-4">
-                <p>Use the buttons below to navigate through the Teacher functionalities.</p>
-                <a class="btn btn-primary btn-lg" href="pages/getKelas.html" role="button">Manage Classes</a>
-                <!-- <a class="btn btn-secondary btn-lg" href="pages/getKelasById.html" role="button">Search Class by ID</a> -->
+                <p>Use the button below to navigate to the Teacher functionalities.</p>
+                <button id="manageClassesButton" class="btn btn-primary btn-lg">Manage Classes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Teacher Login</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        <div id="loginError" class="text-danger mt-2" style="display: none;"></div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
     <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            loginModal.show(); // Show login modal on page load
+
+            const loginForm = document.getElementById('loginForm');
+            loginForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const username = document.getElementById('username').value.trim();
+
+                // Redirect to getKelas.html with the username as ID
+                window.location.href = `pages/getKelas.html?id=${username}`;
+
+                // Close modal after login attempt
+                loginModal.hide();
+            });
+        });
+    </script>
 </body>
 </html>

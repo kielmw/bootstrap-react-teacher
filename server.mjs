@@ -10,8 +10,8 @@ const app = express();
 const upload = multer({ dest: 'uploads/' });
 
 // Define the base URL for the external API
-const API_BASE_URL = 'http://localhost:8080/api';
-const STUDENT_API_BASE_URL = 'http://localhost:9090/api';
+const API_BASE_URL = 'https://kielproses.loca.lt/api';
+const STUDENT_API_BASE_URL = 'https://kielkelas.loca.lt/api';
 
 app.use(cors({
     origin: 'http://127.0.0.1:5501' // Allow requests from this origin
