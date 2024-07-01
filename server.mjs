@@ -14,7 +14,7 @@ const API_BASE_URL = 'https://kielproses.loca.lt/api';
 const STUDENT_API_BASE_URL = 'https://kielkelas.loca.lt/api';
 
 app.use(cors({
-    origin: 'http://127.0.0.1:5501' // Allow requests from this origin
+    origin: '*' // Allow requests from this origin
 }));
 
 // Middleware to parse JSON bodies
