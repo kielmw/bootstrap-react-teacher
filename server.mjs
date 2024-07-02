@@ -350,5 +350,5 @@ app.put('/api/kontrol-kelas-student/:idKelas/:studentId', async (req, res) => {
 const PORT = process.env.PORT || 3500;
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`Server is running on port ${PORT}`);
 });
