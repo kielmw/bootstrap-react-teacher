@@ -349,6 +349,6 @@ app.put('/api/kontrol-kelas-student/:idKelas/:studentId', async (req, res) => {
 // Start the server on port 3500
 const PORT = process.env.PORT || 3500;
 
-app.listen(port, () => {
+app.listen(PORT, () => {
     console.log(`Server is running on port ${port}`);
 });
