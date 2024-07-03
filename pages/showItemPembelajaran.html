@@ -81,7 +81,7 @@
             const idKelas = getQueryParameter('idKelas'); // Retrieve the idKelas from the URL
 
             if (idKelas) {
-                fetch(`http://localhost:3500/api/proses/${idKelas}`)
+                fetch(`https://teacherserver.loca.lt/api/proses/${idKelas}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -130,7 +130,7 @@
                             deleteButton.textContent = "Delete";
                             deleteButton.addEventListener("click", () => {
                                 if (confirm("Are you sure you want to delete this item?")) {
-                                    fetch(`http://localhost:3500/api/proses/itemPembelajaran/delete/${idKelas}/${item.idPertemuan}`, {
+                                    fetch(`https://teacherserver.loca.lt/api/proses/itemPembelajaran/delete/${idKelas}/${item.idPertemuan}`, {
                                         method: 'DELETE'
                                     })
                                     .then(response => {

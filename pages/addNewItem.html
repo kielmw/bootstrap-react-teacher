@@ -73,7 +73,7 @@
             let pdfList;
 
             if (idKelas) {
-                fetch(`http://localhost:3500/api/proses/${idKelas}/pdfs`)
+                fetch(`https://teacherserver.loca.lt/api/proses/${idKelas}/pdfs`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -121,7 +121,7 @@
                         newItem.idPdf = null;
                     }
 
-                    fetch(`http://localhost:3500/api/proses/itemPembelajaran/add/${idKelas}`, {
+                    fetch(`https://teacherserver.loca.lt/api/proses/itemPembelajaran/add/${idKelas}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'

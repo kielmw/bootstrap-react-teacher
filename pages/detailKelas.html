@@ -111,7 +111,7 @@
             const idKelas = getQueryParameter('id'); // Retrieve the idKelas from the URL
 
             if (idKelas) {
-                fetch(`http://localhost:3500/api/proses/${idKelas}`)
+                fetch(`https://teacherserver.loca.lt/api/proses/${idKelas}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -175,7 +175,7 @@
                             const pdfDownloadButton = document.createElement("a");
                             pdfDownloadButton.className = "btn btn-primary";
                             pdfDownloadButton.textContent = "Download";
-                            pdfDownloadButton.href = `http://localhost:3500/api/proses/pdf/download/${data.idKelas}/${pdf.idPdf}`;
+                            pdfDownloadButton.href = `https://teacherserver.loca.lt/api/proses/pdf/download/${data.idKelas}/${pdf.idPdf}`;
                             pdfDownloadButton.setAttribute('download', pdf.fileName);
                             const pdfDeleteButton = document.createElement("button");
                             pdfDeleteButton.className = "btn btn-danger";
@@ -234,7 +234,7 @@
                     const formData = new FormData();
                     formData.append("file", fileInput);
 
-                    fetch(`http://localhost:3500/api/proses/pdf/upload/${idKelas}`, {
+                    fetch(`https://teacherserver.loca.lt/api/proses/pdf/upload/${idKelas}`, {
                         method: 'POST',
                         body: formData
                     })
@@ -259,7 +259,7 @@
         });
 
         function removeFile(idKelas, idPdf) {
-            fetch(`http://localhost:3500/api/proses/pdf/delete/${idKelas}/${idPdf}`, {
+            fetch(`https://teacherserver.loca.lt/api/proses/pdf/delete/${idKelas}/${idPdf}`, {
                 method: 'DELETE'
             })
             .then(response => {

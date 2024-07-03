@@ -9,32 +9,16 @@ import FormData from 'form-data';
 const app = express();
 const upload = multer({ dest: 'uploads/' });
 
-// Define the base URL for the external API
 const API_BASE_URL = 'https://kielproses.loca.lt/api';
 const STUDENT_API_BASE_URL = 'https://kielkelas.loca.lt/api';
 
-app.use(cors({
-    origin: '*' // Allow requests from this origin
-}));
-
-// Middleware to parse JSON bodies
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
-// Function to fetch data from external API
 async function fetchData(apiUrl) {
     try {
-        const response = await fetch(apiUrl, {
-            method: 'GET',
-            headers: {
-                'ngrok-skip-browser-warning': 'true'
-            }
-        });
-
-        if (!response.ok) {
-            const errorDetails = await response.text();
-            throw new Error(`Network response was not ok: ${response.statusText}, Details: ${errorDetails}`);
-        }
-
+        const response = await fetch(apiUrl, { headers: { 'ngrok-skip-browser-warning': 'true' } });
+        if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
         return await response.json();
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -42,11 +26,9 @@ async function fetchData(apiUrl) {
     }
 }
 
-// Route to handle GET requests for /api/proses/guru/:id
 app.get('/api/proses/guru/:id', async (req, res) => {
     const { id } = req.params;
     const apiUrl = `${API_BASE_URL}/proses/guru/${id}`;
-
     try {
         const data = await fetchData(apiUrl);
         res.json(data);
@@ -349,6 +331,6 @@ app.put('/api/kontrol-kelas-student/:idKelas/:studentId', async (req, res) => {
 // Start the server on port 3500
 const PORT = process.env.PORT || 3500;
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+app.listen(3500, () => {
+    console.log(`Server is running on port 3500`);
 });

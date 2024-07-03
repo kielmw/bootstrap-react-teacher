@@ -89,7 +89,7 @@
             
             const tableBody = document.getElementById("kelasTableBody");
 
-            fetch(`http://localhost:3500/api/proses/guru/${id}`)
+            fetch(`https://teacherserver.loca.lt/api/proses/guru/${id}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -156,7 +156,7 @@
                 event.preventDefault();
                 const idKelas = event.target.dataset.idKelas;
 
-                fetch(`http://localhost:3500/api/member/${idKelas}`)
+                fetch(`https://teacherserver.loca.lt/api/member/${idKelas}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -169,7 +169,7 @@
 
                         // Process each student ID and fetch their nilaiAkhir
                         const studentPromises = data.map(studentId => {
-                            return fetch(`http://localhost:3500/api/kontrol-kelas-student/${idKelas}/${studentId}`)
+                            return fetch(`https://teacherserver.loca.lt/api/kontrol-kelas-student/${idKelas}/${studentId}`)
                                 .then(response => {
                                     if (!response.ok) {
                                         throw new Error('Network response was not ok');
